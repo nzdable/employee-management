@@ -18,7 +18,7 @@
       </nav>
     </div>
     <div class="col text-end fw-lighter">
-      <b>UserId</b>
+      <b>EmployeeId</b>
     </div>
   </div>
 
@@ -68,9 +68,6 @@
     </div>
   </div>
 
-<!-- Other form fields -->
-
-
   <div class="row form-group mb-4">
     <div class="col">
       <label for="tel">Telephone</label>
@@ -109,7 +106,40 @@
     <label for="details">Customer Details</label>
     <textarea class="form-control" name="details" id="details" cols="30" rows="12" placeholder="Customer Details"></textarea>
   </div>
+
+  <!-- Leave -->
+  <div class="row form-group mb-4">
+    <div class="col">
+      <label for="start_leave">Start Leave</label>
+      <input type="date" class="form-control" id="start_leave" name="start_leave" required>
+    </div>
+    <div class="col">
+      <label for="end_leave">End Leave</label>
+      <input type="date" class="form-control" id="end_leave" name="end_leave" required>
+    </div>
+  </div>
+
+  <div class="row form-group mb-4">
+    <div class="col">
+      <label for="leave_type">Leave Type</label>
+      <select class="form-control" id="leave_type" name="leave_type" required>
+        <option value="vacation">Vacation</option>
+        <option value="sick">Sick</option>
+        <option value="maternity">Maternity</option>
+        <option value="paternity">Paternity</option>
+      </select>
+    </div>
+    <div class="col">
+      <label for="leave_status">Leave Status</label>
+      <select class="form-control" id="leave_status" name="leave_status" required>
+        <option value="approved">Approved</option>
+        <option value="denied">Denied</option>
+        <option value="pending">Pending</option>
+      </select>
+    </div>
+  </div>
+
   <div class="form-group mb-4">
-    <button type="submit" class="btn btn-primary">Add Customer</button>
+    <button type="submit" class="btn btn-primary">Add Employee</button>
   </div>
 </form>

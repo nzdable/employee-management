@@ -21,7 +21,7 @@
     </div>
     <div class="col text-end fw-lighter">
       <b>Last Updated <%= new Date(customer.updatedAt).toUTCString() %> </b>
-      <b>UserId:</b> <%= customer._id %>
+      <b>Employee ID:</b> <%= customer._id %>
     </div>
   </div>
 
@@ -94,4 +94,20 @@
     </div>
   </li>
 
+  <% if(customer.leaves && customer.leaves.length > 0) { %>
+    <li class="list-group-item">
+      <h5>Leave Details</h5>
+      <ul class="list-unstyled">
+        <% customer.leaves.forEach(leave => { %>
+          <li>
+            <b>Start Leave:</b> <%= leave.startLeave %><br>
+            <b>End Leave:</b> <%= leave.endLeave %><br>
+            <b>Leave Type:</b> <%= leave.leaveType %><br>
+            <b>Leave Status:</b> <%= leave.leaveStatus %>
+          </li>
+        <% }); %>
+      </ul>
+    </li>
+  <% } %>
+  
 </ul>

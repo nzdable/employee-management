@@ -61,15 +61,22 @@ const CustomerSchema = new Schema({
     default: Date.now()
   },
   updatedAt: {
-    type: Date,
+    type: Date, 
     default: Date.now()
-  }
+  },
+  leaves: [{
+    start_leave: { type: Date, required: true },
+    end_leave: { type: Date, required: true },
+    leave_type: { type: String, enum: ['vacation', 'sick', 'maternity', 'paternity'], required: true },
+    leave_status: { type: String, enum: ['approved', 'denied', 'pending'], required: true },
+    type: Schema.Types.ObjectId,
+    ref: 'Leave'
+  }]
 });
 
 function generateEmployeeId() {
-  // Generate employee ID with leading zeros
-  const randomNumber = Math.floor(Math.random() * 90000) + 10000;
-  return '0000' + randomNumber.toString();
+  // Generate employee ID with exactly 5 digits
+  return Math.floor(10000 + Math.random() * 90000).toString();
 }
 
 module.exports = mongoose.model('Customer', CustomerSchema);

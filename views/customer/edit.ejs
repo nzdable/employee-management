@@ -19,7 +19,7 @@
     </div>
     <div class="col text-end fw-lighter">
       <b>Last Updated: <%= new Date(customer.updatedAt).toUTCString() %></b>
-      <b>UserId:</b> <%= customer._id %>
+      <b>Employee ID:</b> <%= customer._id %>
     </div>
   </div>
 </div>
@@ -104,12 +104,44 @@
   </div>
 
   <div class="form-group mb-4">
-    <label for="details">Customer Details</label>
+    <label for="details">Employee Details</label>
     <textarea class="form-control" name="details" id="details" cols="30" rows="12" placeholder="Customer Details"><%= customer.details %></textarea>
   </div>
 
+  <!-- Leave details section -->
+  <div class="row form-group mb-4">
+    <div class="col">
+      <label for="startLeave">Start Leave</label>
+      <input type="date" class="form-control" id="startLeave" name="startLeave" value="<%= customer.startLeave %>" required>
+    </div>
+    <div class="col">
+      <label for="endLeave">End Leave</label>
+      <input type="date" class="form-control" id="endLeave" name="endLeave" value="<%= customer.endLeave %>" required>
+    </div>
+    <div class="col">
+      <label for="leaveType">Leave Type</label>
+      <select class="form-control" id="leaveType" name="leaveType" required>
+        <option value="">Select Leave Type</option>
+        <option value="vacation" <%= customer.leaveType === 'vacation' ? 'selected' : '' %>>Vacation</option>
+        <option value="sick" <%= customer.leaveType === 'sick' ? 'selected' : '' %>>Sick</option>
+        <option value="maternity" <%= customer.leaveType === 'maternity' ? 'selected' : '' %>>Maternity</option>
+        <option value="paternity" <%= customer.leaveType === 'paternity' ? 'selected' : '' %>>Paternity</option>
+      </select>
+    </div>
+    <div class="col">
+      <label for="leaveStatus">Leave Status</label>
+      <select class="form-control" id="leaveStatus" name="leaveStatus" required>
+        <option value="">Select Leave Status</option>
+        <option value="approved" <%= customer.leaveStatus === 'approved' ? 'selected' : '' %>>Approved</option>
+        <option value="denied" <%= customer.leaveStatus === 'denied' ? 'selected' : '' %>>Denied</option>
+        <option value="pending" <%= customer.leaveStatus === 'pending' ? 'selected' : '' %>>Pending</option>
+      </select>
+    </div>
+  </div>
+  
+
   <div class="form-group mb-4">
-    <button type="submit" class="btn btn-primary">Update Customer</button>
+    <button type="submit" class="btn btn-primary">Update Employee</button>
 
     <button type="button" class="btn btn-danger" data-bs-toggle="modal" id="deleteButton" data-bs-target="#deleteModal">Delete Customer</button>
 
@@ -121,20 +153,21 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <div class="modal-title">You are about to remove a customer record.</div>
+        <div class="modal-title">You are about to remove an employee record.</div>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <p>
-          This will remove the customer record of <b class="fw-bold"><%= customer.firstName %> <%= customer.lastName %></b><br/>
+          This will remove the employee record of <b class="fw-bold"><%= customer.firstName %> <%= customer.lastName %></b><br/>
           Are you sure?
         </p>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <form action="/edit/<%= customer._id %>?_method=DELETE" method="POST" class="position-relative">
-          <button type="submit" class="btn btn-primary">Yes, Remove Customer</button>
-        </form>
+        <!-- Use DELETE method for deletion -->
+        <form action="/delete/<%= customer._id %>" method="POST" class="position-relative">
+          <button type="submit" class="btn btn-primary">Yes, Remove Employee</button>
+        </form>           
       </div>
     </div>
   </div>
