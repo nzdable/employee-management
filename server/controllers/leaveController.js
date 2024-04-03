@@ -35,6 +35,9 @@ exports.createLeave = async (req, res) => {
       return res.status(400).json({ error: 'Invalid employee or superior name' });
     }
 
+    // Fetch only superiors with position 'manager'
+    const managerSuperiors = await Customer.find({ position: 'manager' });
+
     const newLeave = new Leave({
       employeeId,
       superiorId,
@@ -50,7 +53,7 @@ exports.createLeave = async (req, res) => {
     const leaveRequests = await Leave.find({ /* Add any conditions if necessary */ });
 
     // Render the view with only the leave information
-    res.render('leave', { leaveRequests });
+    res.render('leave', { leaveRequests, managerSuperiors });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'An error occurred while saving leave details' });

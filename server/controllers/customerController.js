@@ -31,12 +31,29 @@ exports.homepage = async (req, res) => {
   }
 };
 
+// Function to retrieve only superiors with position 'manager'
+const getManagerSuperiors = async () => {
+  try {
+    const managerSuperiors = await Customer.find({ position: 'Manager' });
+    return managerSuperiors;
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+};
+
 exports.about = async (req, res) => {
   try {
-    const customers = await Customer.find(); // Fetch all customers from the database
+    // Fetch all customers from the database
+    const customers = await Customer.find();
+    
+    // Fetch only superiors with position 'manager'
+    const managerSuperiors = await getManagerSuperiors();
+
     const locals = {
-      title: "Leave",
-      customers: customers // Pass the customers data to the template
+      title: "About",
+      customers: customers, // Pass the customers data to the template
+      managerSuperiors: managerSuperiors // Pass the manager superiors data to the template
     };
     res.render("about", locals);
   } catch (error) {

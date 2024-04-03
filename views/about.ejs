@@ -10,7 +10,7 @@
           <option value="<%= customer._id %>"><%= customer.firstName %> <%= customer.lastName %></option>
         <% }) %>
       </select>
-    </div>
+    </div>   
 
     <div class="col">
       <label for="startDate">Start Leave</label>
@@ -44,7 +44,7 @@
       <select class="form-control" id="leaveStatus" name="leaveStatus">
         <option value="">Select Leave Status</option>
         <option value="Approved">Approved</option>
-        <option value="Denied">Denied</option>
+        <option value="Rejected">Rejected</option>
         <option value="Pending">Pending</option>
         <!-- Add more options as needed -->
       </select>
@@ -56,9 +56,9 @@
       <label for="superior">Superior</label>
       <select class="form-control" id="superior" name="superior">
         <option value="">Select Superior</option>
-        <!-- Loop through customers to populate superior options -->
-        <% customers.forEach(customer => { %>
-          <option value="<%= customer.firstName %> <%= customer.lastName %>"><%= customer.firstName %> <%= customer.lastName %></option>
+        <!-- Loop through manager superiors to populate superior options -->
+        <% managerSuperiors.forEach(manager => { %>
+          <option value="<%= manager.firstName %> <%= manager.lastName %>"><%= manager.firstName %> <%= manager.lastName %></option>
         <% }) %>
       </select>
     </div>
