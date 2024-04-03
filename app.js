@@ -48,7 +48,7 @@ app.set('view engine', 'ejs');
 
 // Routes
 app.use('/', require('./server/routes/customer'))
-
+app.use('/', require('./server/routes/leave')); 
 
 // Handle 404
 app.get('*', (req, res) => {

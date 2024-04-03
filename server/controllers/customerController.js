@@ -1,24 +1,22 @@
 const Customer = require("../models/Customer");
 const mongoose = require("mongoose");
-const Leave = require("../models/Leave");
-
+const LeaveController = require('../controllers/leaveController');
 
 exports.homepage = async (req, res) => {
+  const messages = await req.flash("info");
+
+  const locals = {
+    title: "Employee Management System",
+  };
+
+  let perPage = 12;
+  let page = req.query.page || 1;
+
   try {
-    const messages = await req.flash("info");
-    const locals = {
-      title: "NodeJs",
-      description: "Free NodeJs User Management System",
-    };
-    const perPage = 12;
-    const page = req.query.page || 1;
-
-    const customers = await Customer.aggregate([
-      { $sort: { createdAt: -1 } },
-      { $skip: perPage * page - perPage },
-      { $limit: perPage }
-    ]);
-
+    const customers = await Customer.aggregate([{ $sort: { createdAt: -1 } }])
+      .skip(perPage * page - perPage)
+      .limit(perPage)
+      .exec();
     const count = await Customer.countDocuments({});
 
     res.render("index", {
@@ -30,15 +28,15 @@ exports.homepage = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
-    res.status(500).send("An error occurred while fetching customers.");
   }
 };
 
 exports.about = async (req, res) => {
   try {
+    const customers = await Customer.find(); // Fetch all customers from the database
     const locals = {
-      title: "About",
-      description: "Free NodeJs User Management System",
+      title: "Leave",
+      customers: customers // Pass the customers data to the template
     };
     res.render("about", locals);
   } catch (error) {
@@ -47,111 +45,146 @@ exports.about = async (req, res) => {
   }
 };
 
+
 exports.addCustomer = async (req, res) => {
-  try {
-    const locals = {
-      title: "Add New Customer - NodeJs",
-      description: "Free NodeJs User Management System",
-    };
-    res.render("customer/add", locals);
-  } catch (error) {
-    console.log(error);
-    res.status(500).send("An error occurred while rendering add customer page.");
-  }
+  const locals = {
+    title: "Add New Customer - NodeJs",
+  };
+
+  res.render("customer/add", locals);
 };
 
 exports.postCustomer = async (req, res) => {
+  console.log(req.body);
+
+  const newCustomer = new Customer({
+    firstName: req.body.firstName,
+    lastName: req.body.lastName,
+    details: req.body.details,
+    tel: req.body.tel,
+    email: req.body.email,
+    department: req.body.department,
+    destination: req.body.destination, 
+    type: req.body.type, 
+    position: req.body.position, 
+    addressLine: req.body.addressLine, // Make sure these fields are added
+    barangay: req.body.barangay,       // Make sure these fields are added
+    city: req.body.city, 
+    province: req.body.province,       // Make sure these fields are added
+    country: req.body.country,         // Make sure these fields are added
+    zipcode: req.body.zipcode          // Make sure these fields are added
+  });
+
   try {
-    const newCustomer = new Customer(req.body);
-    await newCustomer.save();
-    await req.flash("info", "New employee has been added.");
+    await Customer.create(newCustomer);
+    
+    // Save employee name as signatory for leave
+    const { firstName, lastName } = req.body;
+    const signatoryName = `${firstName} ${lastName}`;
+    await LeaveController.saveSignatory({
+      ...req.body,
+      signatories: [signatoryName],
+    });
+
+    await req.flash("info", "A New Employee Information Has Been Added.");
+
     res.redirect("/");
   } catch (error) {
     console.log(error);
-    res.status(500).send("An error occurred while adding a new customer.");
   }
 };
 
 exports.view = async (req, res) => {
   try {
-    const customer = await Customer.findById(req.params.id)
-      .populate('department')
+    const customer = await Customer.findOne({ _id: req.params.id })
+    .populate('department')
       .populate('destination')
-      .populate('leaves');
+        .populate('type')
+        .populate('position');
 
     const locals = {
-      title: "View Customer Data",
-      description: "Free NodeJs User Management System",
+      title: "View Employee Data",
     };
 
-    res.render("customer/view", { locals, customer });
+    res.render("customer/view", {
+      locals,
+      customer,
+    });
   } catch (error) {
     console.log(error);
-    res.status(500).send("An error occurred while viewing customer data.");
   }
 };
 
 exports.edit = async (req, res) => {
   try {
-    const customer = await Customer.findById(req.params.id);
+    const customer = await Customer.findOne({ _id: req.params.id });
 
     const locals = {
-      title: "Edit Customer Data",
-      description: "Free NodeJs User Management System",
+      title: "Edit Employee Data",
     };
 
-    res.render("customer/edit", { locals, customer });
+    res.render("customer/edit", {
+      locals,
+      customer,
+    });
   } catch (error) {
     console.log(error);
-    res.status(500).send("An error occurred while rendering edit customer page.");
   }
 };
 
 exports.editPost = async (req, res) => {
+  const { firstName, lastName, tel, email, details, department, destination, type } = req.body;
   try {
-    const { firstName, lastName, tel, email, details, department, destination } = req.body;
     await Customer.findByIdAndUpdate(req.params.id, {
       firstName,
       lastName,
       tel,
       email,
       details,
-      department,
-      destination,
+      department, // Assuming this is the ObjectId of the department
+      destination, // Assuming this is the ObjectId of the destination
+      type,
       updatedAt: Date.now(),
     });
+
     await req.flash("info", "Employee updated successfully.");
     res.redirect(`/view/${req.params.id}`);
   } catch (error) {
     console.error(error);
-    res.status(500).send("An error occurred while updating the employee.");
+    res.status(500).send("An error occurred while updating the customer.");
   }
 };
 
 exports.deleteCustomer = async (req, res) => {
   try {
-    await Customer.findByIdAndDelete(req.params.id);
-    req.flash("info", "Employee deleted successfully.");
+    await Customer.deleteOne({ _id: req.params.id });
     res.redirect("/");
   } catch (error) {
     console.log(error);
-    req.flash("error", "An error occurred while deleting the employee.");
-    res.redirect("/");
   }
 };
 
-exports.postCustomerLeave = async (req, res) => {
+exports.searchCustomers = async (req, res) => {
+  const locals = {
+    title: "Search Employee Data",
+  };
+
   try {
-    const { customer_id, start_leave, end_leave, leave_type, leave_status } = req.body;
-    const customer = await Customer.findById(customer_id);
-    if (!customer) {
-      return res.status(404).send("Employee not found.");
-    }
-    customer.leaves.push({ start_leave, end_leave, leave_type, leave_status });
-    await customer.save();
-    res.redirect("/");
+    let searchTerm = req.body.searchTerm;
+    const searchNoSpecialChar = searchTerm.replace(/[^a-zA-Z0-9 ]/g, "");
+
+    const customers = await Customer.find({
+      $or: [
+        { firstName: { $regex: new RegExp(searchNoSpecialChar, "i") } },
+        { lastName: { $regex: new RegExp(searchNoSpecialChar, "i") } },
+      ],
+    });
+
+    res.render("search", {
+      customers,
+      locals,
+    });
   } catch (error) {
-    console.error(error);
-    res.status(500).send("An error occurred while adding employee leave.");
+    console.log(error);
   }
 };

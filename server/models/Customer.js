@@ -4,79 +4,80 @@ const Schema = mongoose.Schema;
 const CustomerSchema = new Schema({
   employeeId: {
     type: String,
-    required: true,
+    required: false,
     unique: true,
     default: generateEmployeeId
   },
   firstName: {
     type: String,
-    required: true
+    required: false
   },
   lastName: {
     type: String,
-    required: true
+    required: false
   },
   tel: {
     type: String,
-    required: true
+    required: false
   },
   email: {
     type: String,
-    required: true
-  },
-  details: {
-    type: String,
-    required: true
+    required: false
   },
   department: {
     type: String,
-    required: true
+    required: false
+  },
+  type: {
+    type: String,
+    required: false
   },
   destination: {
     type: String,
-    required: true
+    required: false
+  },
+  position: {
+    type: String,
+    required: false
   },
   addressLine: {
     type: String,
-    required: true
+    required: false
   },
   barangay: {
     type: String,
-    required: true
+    required: false
+  },
+  city: {
+    type: String,
+    required: false
   },
   province: {
     type: String,
-    required: true
+    required: false
   },
   country: {
     type: String,
-    required: true
+    required: false
   },
   zipcode: {
     type: String,
-    required: true
+    required: false
   },
   createdAt: {
     type: Date,
     default: Date.now()
   },
   updatedAt: {
-    type: Date, 
+    type: Date,
     default: Date.now()
-  },
-  leaves: [{
-    start_leave: { type: Date, required: true },
-    end_leave: { type: Date, required: true },
-    leave_type: { type: String, enum: ['vacation', 'sick', 'maternity', 'paternity'], required: true },
-    leave_status: { type: String, enum: ['approved', 'denied', 'pending'], required: true },
-    type: Schema.Types.ObjectId,
-    ref: 'Leave'
-  }]
+  }
 });
 
 function generateEmployeeId() {
-  // Generate employee ID with exactly 5 digits
-  return Math.floor(10000 + Math.random() * 90000).toString();
+  // Generate employee ID with leading zeros
+  const randomNumber = Math.floor(Math.random() * 90000) + 10000;
+  return '0000' + randomNumber.toString();
 }
 
 module.exports = mongoose.model('Customer', CustomerSchema);

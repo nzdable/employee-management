@@ -1,86 +1,53 @@
-const Leave = require("../models/Leave");
+const Leave = require('../models/Leave');
+const Customer = require('../models/Customer');
 
-// Create a new leave
+// Function to retrieve employee ID by name
+const getEmployeeIdByName = async (employeeName) => {
+  try {
+    const customer = await Customer.findOne({ fullName: employeeName }); // Assuming fullName is a field in your Customer model that combines first name and last name
+    return customer._id; // Assuming employeeId is stored in the _id field of the Customer model
+  } catch (error) {
+    console.error(error);
+    return null; // Return null if employee is not found
+  }
+};
+
+// Function to retrieve superior ID by name
+const getSuperiorIdByName = async (superiorName) => {
+  try {
+    const customer = await Customer.findOne({ fullName: superiorName }); // Assuming fullName is a field in your Customer model that combines first name and last name
+    return customer._id; // Assuming superiorId is stored in the _id field of the Customer model
+  } catch (error) {
+    console.error(error);
+    return null; // Return null if superior is not found
+  }
+};
+
 exports.createLeave = async (req, res) => {
   try {
-    const { start_leave, end_leave, leave_type, leave_status, customer_id } = req.body;
+    const { employeeName, superiorName, leaveType, leaveStatus, startDate, endDate } = req.body;
 
-    // Create a new leave instance
+    // Assuming you have a function to retrieve the employee and superior IDs from their names
+    const employeeId = await getEmployeeIdByName(employeeName);
+    const superiorId = await getSuperiorIdByName(superiorName);
+
+    if (!employeeId || !superiorId) {
+      return res.status(400).json({ error: 'Invalid employee or superior name' });
+    }
+
     const newLeave = new Leave({
-      start_leave,
-      end_leave,
-      leave_type,
-      leave_status,
-      customer: customer_id // Assuming customer_id is sent from the request
+      employeeId,
+      superiorId,
+      leaveType,
+      leaveStatus,
+      startDate,
+      endDate,
     });
 
-    // Save the leave to the database
     await newLeave.save();
-
-    res.status(201).json({ message: "Leave created successfully", leave: newLeave });
+    res.status(201).json({ message: 'Leave saved successfully' });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "An error occurred while creating the leave" });
-  }
-};
-
-// Get all leaves
-exports.getAllLeaves = async (req, res) => {
-  try {
-    const leaves = await Leave.find();
-    res.status(200).json(leaves);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "An error occurred while fetching leaves" });
-  }
-};
-
-// Get a single leave by ID
-exports.getLeaveById = async (req, res) => {
-  try {
-    const leave = await Leave.findById(req.params.id);
-    if (!leave) {
-      return res.status(404).json({ message: "Leave not found" });
-    }
-    res.status(200).json(leave);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "An error occurred while fetching the leave" });
-  }
-};
-
-// Update a leave
-exports.updateLeave = async (req, res) => {
-  try {
-    const { start_leave, end_leave, leave_type, leave_status } = req.body;
-    const updatedLeave = await Leave.findByIdAndUpdate(req.params.id, {
-      start_leave,
-      end_leave,
-      leave_type,
-      leave_status
-    }, { new: true });
-
-    if (!updatedLeave) {
-      return res.status(404).json({ message: "Leave not found" });
-    }
-    
-    res.status(200).json({ message: "Leave updated successfully", leave: updatedLeave });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "An error occurred while updating the leave" });
-  }
-};
-
-// Delete a leave
-exports.deleteLeave = async (req, res) => {
-  try {
-    const deletedLeave = await Leave.findByIdAndDelete(req.params.id);
-    if (!deletedLeave) {
-      return res.status(404).json({ message: "Leave not found" });
-    }
-    res.status(200).json({ message: "Leave deleted successfully" });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "An error occurred while deleting the leave" });
+    res.status(500).json({ error: 'An error occurred while saving leave details' });
   }
 };

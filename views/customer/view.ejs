@@ -21,7 +21,8 @@
     </div>
     <div class="col text-end fw-lighter">
       <b>Last Updated <%= new Date(customer.updatedAt).toUTCString() %> </b>
-      <b>Employee ID:</b> <%= customer._id %>
+      <br>
+      <b>User ID:</b> <%= customer._id %>
     </div>
   </div>
 
@@ -39,7 +40,7 @@
 <li class="list-group-item"> 
   <div class="row">
     <div class="col" style="max-width: 140px"> <b>Address:</b></div>
-    <div class="col"><%= customer.addressLine %>, <%= customer.barangay %>, <%= customer.province %>, <%= customer.country %>, <%= customer.zipcode %></div>
+    <div class="col"><%= customer.addressLine %>, <%= customer.barangay %>, <%= customer.city %>,  <%= customer.province %>, <%= customer.country %>, <%= customer.zipcode %></div>
   </div>
 </li>
 
@@ -60,7 +61,7 @@
 
   <li class="list-group-item"> 
     <div class="row">
-      <div class="col" style="max-width: 140px"> <b>Details:</b></div>
+      <div class="col" style="max-width: 140px"> <b>Designation:</b></div>
       <div class="col"><%= customer.details %></div>
     </div>
   </li>
@@ -75,8 +76,22 @@
 
   <li class="list-group-item"> 
     <div class="row">
-      <div class="col" style="max-width: 140px"> <b>Destination:</b></div>
+      <div class="col" style="max-width: 140px"> <b>Status:</b></div>
       <div class="col"><%= customer.destination %></div>
+    </div>
+  </li>
+
+  <li class="list-group-item"> 
+    <div class="row">
+      <div class="col" style="max-width: 140px"> <b>Employee Type:</b></div>
+      <div class="col"><%= customer.type %></div>
+    </div>
+  </li>
+
+  <li class="list-group-item"> 
+    <div class="row">
+      <div class="col" style="max-width: 140px"> <b>Position:</b></div>
+      <div class="col"><%= customer.position %></div>
     </div>
   </li>
 
@@ -94,20 +109,4 @@
     </div>
   </li>
 
-  <% if(customer.leaves && customer.leaves.length > 0) { %>
-    <li class="list-group-item">
-      <h5>Leave Details</h5>
-      <ul class="list-unstyled">
-        <% customer.leaves.forEach(leave => { %>
-          <li>
-            <b>Start Leave:</b> <%= leave.startLeave %><br>
-            <b>End Leave:</b> <%= leave.endLeave %><br>
-            <b>Leave Type:</b> <%= leave.leaveType %><br>
-            <b>Leave Status:</b> <%= leave.leaveStatus %>
-          </li>
-        <% }); %>
-      </ul>
-    </li>
-  <% } %>
-  
 </ul>
