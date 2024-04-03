@@ -45,7 +45,12 @@ exports.createLeave = async (req, res) => {
     });
 
     await newLeave.save();
-    res.status(201).json({ message: 'Leave saved successfully' });
+
+    // Fetch the updated list of leave requests
+    const leaveRequests = await Leave.find({ /* Add any conditions if necessary */ });
+
+    // Render the view with only the leave information
+    res.render('leave', { leaveRequests });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'An error occurred while saving leave details' });
