@@ -59,3 +59,67 @@ exports.createLeave = async (req, res) => {
     res.status(500).json({ error: 'An error occurred while saving leave details' });
   }
 };
+
+exports.getLeave = async (req, res) => {
+  try {
+    // Fetch the updated list of leave requests
+    const leaveRequests = await Leave.find({ /* Add any conditions if necessary */ });
+
+    // Fetch only superiors with position 'manager'
+    const managerSuperiors = await Customer.find({ position: 'manager' });
+
+    // Render the view with the leave information
+    res.render('leave', { leaveRequests, managerSuperiors });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'An error occurred while fetching leave details' });
+  }
+};
+
+// Function to handle editing of leave details
+exports.editLeave = async (req, res) => {
+  try {
+    // Retrieve leave ID from request parameters
+    const { id } = req.params;
+
+    // Find leave by ID
+    const leave = await Leave.findById(id);
+
+    // Fetch only superiors with position 'manager'
+    const managerSuperiors = await Customer.find({ position: 'manager' });
+
+    // Render the edit leave form with leave details
+    res.render('editLeave', { leave, managerSuperiors });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'An error occurred while rendering edit leave form' });
+  }
+};
+
+exports.editLeaveForm = async (req, res) => {
+  try {
+    // Fetch leave details based on ID from the database
+    const leave = await Leave.findById(req.params.id);
+    // Render the leave form for editing with the fetched leave details
+    res.render('editLeave', { leave });
+  } catch (error) {
+    console.error(error);
+    // Handle errors appropriately
+    res.status(500).json({ error: 'An error occurred while rendering the edit form' });
+  }
+};
+
+exports.updateLeave = async (req, res) => {
+  try {
+    // Fetch leave details based on ID from the database
+    const leave = await Leave.findById(req.params.id);
+    // Update leave details with data from the request body
+    // Assuming leave details are updated and saved here
+    // Redirect to the leave table page after successful update
+    res.redirect('/leave');
+  } catch (error) {
+    console.error(error);
+    // Handle errors appropriately
+    res.status(500).json({ error: 'An error occurred while updating leave details' });
+  }
+};

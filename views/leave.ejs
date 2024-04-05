@@ -21,20 +21,26 @@
         <th>Leave Status</th>
         <th>Start Date</th>
         <th>End Date</th>
+        <th>Action</th> <!-- Add Action column for edit button -->
       </tr>
     </thead>
     <tbody>
       <% leaveRequests.forEach(leave => { %>
-      <tr>
-        <td><%= leave.employeeId %></td>
-        <td><%= leave.superiorId %></td>
-        <td><%= leave.leaveType %></td>
-        <td><%= leave.leaveStatus %></td>
-        <td><%= leave.startDate %></td>
-        <td><%= leave.endDate %></td>
-      </tr>
+        <tr>
+          <td><%= leave.employeeId %></td>
+          <td><%= leave.superiorId %></td>
+          <td><%= leave.leaveType %></td>
+          <td><%= leave.leaveStatus %></td>
+          <td><%= leave.startDate %></td>
+          <td><%= leave.endDate %></td>
+          <td>
+            <form action="/leave/<%= leave._id %>/edit" method="GET"> <!-- Add edit form -->
+              <button type="submit">Edit</button>
+            </form>
+          </td>
+        </tr>
       <% }) %>
-    </tbody>
+    </tbody>    
   </table>
 </body>
 

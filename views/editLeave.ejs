@@ -1,0 +1,28 @@
+<!-- editLeave.ejs -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Leave</title>
+</head>
+
+<body>
+  <h1>Edit Leave</h1>
+
+  <form action="/leave/<%= leave._id %>" method="POST"> <!-- Update action URL -->
+    <!-- Include leave details in input fields for editing -->
+    <input type="text" name="employeeId" value="<%= leave.employeeId %>">
+    <input type="text" name="superiorId" value="<%= leave.superiorId %>">
+    <input type="text" name="leaveType" value="<%= leave.leaveType %>">
+    <input type="text" name="leaveStatus" value="<%= leave.leaveStatus %>">
+    <input type="date" name="startDate" value="<%= leave.startDate.toISOString().split('T')[0] %>">
+    <input type="date" name="endDate" value="<%= leave.endDate.toISOString().split('T')[0] %>">
+    
+    <button type="submit">Update</button>
+  </form>
+</body>
+
+</html>
