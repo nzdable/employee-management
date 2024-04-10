@@ -13,10 +13,12 @@ exports.homepage = async (req, res) => {
   let page = req.query.page || 1;
 
   try {
-    const customers = await Customer.aggregate([{ $sort: { createdAt: -1 } }])
+    const customers = await Customer.find()
+      .sort({ createdAt: -1 })
       .skip(perPage * page - perPage)
       .limit(perPage)
       .exec();
+
     const count = await Customer.countDocuments({});
 
     res.render("index", {
@@ -28,6 +30,7 @@ exports.homepage = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
+    res.status(500).send("An error occurred while fetching customers.");
   }
 };
 
