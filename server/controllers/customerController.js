@@ -51,7 +51,7 @@ exports.about = async (req, res) => {
     const managerSuperiors = await getManagerSuperiors();
 
     const locals = {
-      title: "About",
+      title: "Leave",
       customers: customers, // Pass the customers data to the template
       managerSuperiors: managerSuperiors // Pass the manager superiors data to the template
     };
@@ -84,12 +84,12 @@ exports.postCustomer = async (req, res) => {
     destination: req.body.destination, 
     type: req.body.type, 
     position: req.body.position, 
-    addressLine: req.body.addressLine, // Make sure these fields are added
-    barangay: req.body.barangay,       // Make sure these fields are added
+    addressLine: req.body.addressLine, 
+    barangay: req.body.barangay,       
     city: req.body.city, 
-    province: req.body.province,       // Make sure these fields are added
-    country: req.body.country,         // Make sure these fields are added
-    zipcode: req.body.zipcode          // Make sure these fields are added
+    province: req.body.province,       
+    country: req.body.country,         
+    zipcode: req.body.zipcode          
   });
 
   try {

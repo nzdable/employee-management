@@ -22,7 +22,7 @@
     <div class="col text-end fw-lighter">
       <b>Last Updated <%= new Date(customer.updatedAt).toUTCString() %> </b>
       <br>
-      <b>User ID:</b> <%= customer._id %>
+      <b>Employee ID:</b> <%= customer._id %>
     </div>
   </div>
 
@@ -59,14 +59,6 @@
     </div>
   </li>
 
-  <li class="list-group-item"> 
-    <div class="row">
-      <div class="col" style="max-width: 140px"> <b>Designation:</b></div>
-      <div class="col"><%= customer.details %></div>
-    </div>
-  </li>
-
-  
   <li class="list-group-item"> 
     <div class="row">
       <div class="col" style="max-width: 140px"> <b>Department:</b></div>

@@ -15,10 +15,10 @@
   <table>
     <thead>
       <tr>
-        <th>Employee Name</th>
-        <th>Superior Name</th>
-        <th>Leave Type</th>
-        <th>Leave Status</th>
+        <th>Name</th>
+        <th>Signatory</th>
+        <th>Type</th>
+        <th>Status</th>
         <th>Start Date</th>
         <th>End Date</th>
         <th>Action</th> <!-- Add Action column for edit button -->
@@ -27,8 +27,8 @@
     <tbody>
       <% leaveRequests.forEach(leave => { %>
         <tr>
-          <td><%= leave.employeeId %></td>
-          <td><%= leave.superiorId %></td>
+          <td><%= leave.employeeName %></td>
+          <td><%= leave.superiorName %></td>
           <td><%= leave.leaveType %></td>
           <td><%= leave.leaveStatus %></td>
           <td><%= leave.startDate %></td>

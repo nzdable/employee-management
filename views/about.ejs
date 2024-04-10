@@ -2,12 +2,12 @@
   <br>
   <div class="row form-group mb-4">
     <div class="col">
-      <label for="employeeId">Employee Name</label>
-      <select class="form-control" id="employeeId" name="employeeId">
+      <label for="employeeName">Employee Name</label> <!-- Update label for employeeName -->
+      <select class="form-control" id="employeeName" name="employeeName"> <!-- Update name attribute to employeeName -->
         <option value="">Select Employee</option>
         <!-- Loop through customers to populate employee options -->
         <% customers.forEach(customer => { %>
-          <option value="<%= customer._id %>"><%= customer.firstName %> <%= customer.lastName %></option>
+          <option value="<%= customer.firstName %> <%= customer.lastName %>"><%= customer.firstName %> <%= customer.lastName %> - <%= customer.department %></option> <!-- Update option value to employee name -->
         <% }) %>
       </select>
     </div>   
@@ -53,17 +53,15 @@
 
   <div class="row form-group mb-4">
     <div class="col">
-      <label for="superior">Superior</label>
-      <select class="form-control" id="superior" name="superior">
-        <option value="">Select Superior</option>
-        <!-- Loop through manager superiors to populate superior options -->
+      <label for="superiorName">Superior</label>
+      <select class="form-control" id="superiorName" name="superiorName">
+        <option value="">Add Signatory</option>
         <% managerSuperiors.forEach(manager => { %>
-          <option value="<%= manager._id %>"><%= manager.firstName %> <%= manager.lastName %></option>
+          <option value="<%= manager.firstName %> <%= manager.lastName %>"><%= manager.firstName %> <%= manager.lastName %> - <%= manager.department %></option>
         <% }) %>
       </select>
     </div>
   </div>
-  
 
   <div class="form-group mb-4">
     <br>
