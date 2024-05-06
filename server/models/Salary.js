@@ -6,7 +6,7 @@ const SalarySchema = new Schema({
         type: String,
         required: true
     },
-    salary: {
+    basicDailyRate: { // Added field for Basic Daily Rate
         type: Number,
         required: true
     },
@@ -28,7 +28,7 @@ const SalarySchema = new Schema({
         default: 0
     },
     // Additional Earnings
-    thirteenthMonth: {
+    overtime: {
         type: Number,
         default: 0
     },
@@ -65,6 +65,19 @@ const SalarySchema = new Schema({
     endingCutoff: {
         type: Date,
         default: Date.now()
+    },
+    // Additional fields for computed values
+    totalEarnings: {
+        type: Number,
+        default: 0
+    },
+    totalDeductions: {
+        type: Number,
+        default: 0
+    },
+    netSalary: {
+        type: Number,
+        default: 0
     }
 });
 

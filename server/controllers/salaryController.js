@@ -1,4 +1,33 @@
 const Salary = require('../models/Salary');
+const Customer = require('../models/Customer');
+
+// Function to calculate the Basic Daily Rate
+const calculateBasicDailyRate = (monthlyRate) => {
+  const numberOfMonthsInYear = 12;
+  const totalWorkingDaysInYear = 260; // Assuming 260 working days in a year
+  return (monthlyRate * numberOfMonthsInYear) / totalWorkingDaysInYear;
+};
+
+// Function to calculate various rates based on the Basic Daily Rate
+const calculateRates = (basicDailyRate) => {
+  return {
+      specialDayRate: basicDailyRate * 1.3,
+      specialDayRestDayRate: basicDailyRate * 1.5,
+      regularHolidayRate: basicDailyRate * 2,
+      regularHolidayRestDayRate: basicDailyRate * 2.6,
+  };
+};
+
+// Function to calculate deductions for absences and tardiness
+const calculateDeductions = (basicDailyRate, absences, tardinessHours) => {
+  const hourlyRate = basicDailyRate / 8; // Assuming 8 working hours per day
+  const absencesDeduction = hourlyRate * 8 * absences; // Assuming 8 hours per day
+  const tardinessDeduction = hourlyRate * tardinessHours;
+  return {
+      absencesDeduction,
+      tardinessDeduction,
+  };
+};
 
 exports.viewSalaryList = async (req, res) => {
   try {
@@ -30,35 +59,40 @@ exports.viewSalaryList = async (req, res) => {
 exports.addSalary = async (req, res) => {
   const {
       employeeName,
-      salary,
+      monthlyRate, // Assuming monthly rate is provided
       startingCutoff,
-      endingCutoff
+      endingCutoff,
+      absences,
+      tardinessHours,
+      // Add other necessary fields as per your requirements
   } = req.body;
 
   try {
-      // Calculate semi-monthly payment based on cutoff dates
-      const semiMonthlySalary = calculateSemiMonthlySalary(salary, startingCutoff, endingCutoff);
+      // Calculate Basic Daily Rate
+      const basicDailyRate = calculateBasicDailyRate(monthlyRate);
 
-      // Calculate government deductions, additional earnings, and other deductions
-      const { pagibig, sss, philhealth, tin } = calculateGovernmentDeductions(semiMonthlySalary);
-      const { thirteenthMonth, incentives } = calculateAdditionalEarnings(semiMonthlySalary);
-      const { tardiness, absences, loans, violations } = calculateOtherDeductions(semiMonthlySalary);
+      // Calculate various rates based on Basic Daily Rate
+      const rates = calculateRates(basicDailyRate);
+
+      // Calculate deductions for absences and tardiness
+      const deductions = calculateDeductions(basicDailyRate, absences, tardinessHours);
+
+      // Calculate total earnings, deductions, and net salary
+      const totalEarnings = basicDailyRate * numberOfWorkingDays; // Modify this based on your requirements
+      const totalDeductions = deductions.absencesDeduction + deductions.tardinessDeduction; // Add other deductions as necessary
+      const netSalary = totalEarnings - totalDeductions;
 
       const newSalary = new Salary({
           employeeName,
-          salary: semiMonthlySalary,
-          pagibig,
-          sss,
-          philhealth,
-          tin,
-          thirteenthMonth,
-          incentives,
-          tardiness,
-          absences,
-          loans,
-          violations,
+          basicDailyRate,
+          ...rates,
+          ...deductions,
+          totalEarnings,
+          totalDeductions,
+          netSalary,
           startingCutoff,
-          endingCutoff
+          endingCutoff,
+          // Add other necessary fields as per your requirements
       });
 
       await newSalary.save();
@@ -71,8 +105,12 @@ exports.addSalary = async (req, res) => {
 
 exports.renderAddSalaryPage = async (req, res) => {
   try {
+    // Retrieve customers from the database
+    const customers = await Customer.find().exec();
+
     const locals = {
       title: "Add New Salary",
+      customers: customers // Pass the customers array to the template
     };
 
     res.render("salary/addSalary", locals);
@@ -82,6 +120,7 @@ exports.renderAddSalaryPage = async (req, res) => {
   }
 };
 
+
 exports.editSalary = async (req, res) => {
   const {
       employeeName,
@@ -90,7 +129,7 @@ exports.editSalary = async (req, res) => {
       sss,
       philhealth,
       tin,
-      thirteenthMonth,
+      overtime,
       incentives,
       tardiness,
       absences,
@@ -109,7 +148,7 @@ exports.editSalary = async (req, res) => {
           sss,
           philhealth,
           tin,
-          thirteenthMonth,
+          overtime,
           incentives,
           tardiness,
           absences,
