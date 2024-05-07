@@ -1,5 +1,7 @@
 const Salary = require('../models/Salary');
 const Customer = require('../models/Customer');
+const PDFDocument = require('pdfkit');
+const blobStream = require('blob-stream');
 
 // Function to calculate the Basic Daily Rate
 const calculateBasicDailyRate = (monthlyRate) => {
@@ -11,10 +13,10 @@ const calculateBasicDailyRate = (monthlyRate) => {
 // Function to calculate various rates based on the Basic Daily Rate
 const calculateRates = (basicDailyRate) => {
   return {
-      specialDayRate: basicDailyRate * 1.3,
-      specialDayRestDayRate: basicDailyRate * 1.5,
-      regularHolidayRate: basicDailyRate * 2,
-      regularHolidayRestDayRate: basicDailyRate * 2.6,
+    specialDayRate: basicDailyRate * 1.3,
+    specialDayRestDayRate: basicDailyRate * 1.5,
+    regularHolidayRate: basicDailyRate * 2,
+    regularHolidayRestDayRate: basicDailyRate * 2.6,
   };
 };
 
@@ -24,8 +26,8 @@ const calculateDeductions = (basicDailyRate, absences, tardinessHours) => {
   const absencesDeduction = hourlyRate * 8 * absences; // Assuming 8 hours per day
   const tardinessDeduction = hourlyRate * tardinessHours;
   return {
-      absencesDeduction,
-      tardinessDeduction,
+    absencesDeduction,
+    tardinessDeduction,
   };
 };
 
@@ -169,13 +171,32 @@ exports.editSalary = async (req, res) => {
 
 exports.generatePayslip = async (req, res) => {
   try {
-      const salary = await Salary.findById(req.params.id);
-      // Implement your logic to generate payslip here
-      // For example, you can render a payslip template with salary details
-      res.render('payslip', { salary });
+    const salary = await Salary.findById(req.params.id);
+
+    // Create a new PDF document
+    const doc = new PDFDocument();
+
+    // Write content to the PDF
+    doc.fontSize(16).text('Payslip', { align: 'center' });
+    doc.fontSize(12).text(`Employee Name: ${salary.employeeName}`);
+    doc.fontSize(12).text(`Basic Daily Rate: ${salary.basicDailyRate}`);
+    // Add more salary details as needed
+
+    // Finalize the PDF
+    doc.end();
+
+    // Set response headers for PDF file
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `attachment; filename=payslip_${salary.employeeName}.pdf`);
+
+    // Send the PDF as a response
+    const stream = doc.pipe(res);
+    stream.on('finish', () => {
+      res.end();
+    });
   } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: 'An error occurred while generating payslip' });
+    console.error(error);
+    res.status(500).json({ error: 'An error occurred while generating payslip' });
   }
 };
 

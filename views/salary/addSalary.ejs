@@ -12,7 +12,7 @@
   </nav>
 </div>
 
-<form action="/salary/add" method="POST">
+<form id="salaryForm" action="/salary/add" method="POST">
   <div class="row form-group mb-4">
       <div class="col">
           <label for="employeeName">Employee Name</label>
@@ -118,6 +118,13 @@
 
   <div class="row form-group mb-4">
     <div class="col">
+        <label for="numberOfWorkingDays">Number of Working Days</label>
+        <input type="number" class="form-control" id="numberOfWorkingDays" name="numberOfWorkingDays" placeholder="Enter Number of Working Days" required>
+    </div>
+  </div>
+
+  <div class="row form-group mb-4">
+    <div class="col">
       <label for="specialNonWorkingDay">Special Non-Working Day</label>
       <input type="number" class="form-control" id="specialNonWorkingDay" name="specialNonWorkingDay" placeholder="Enter Special Non-Working Day" required>
     </div>
@@ -190,6 +197,52 @@
   </div>
 
   <div class="form-group mb-4">
-    <button type="submit" class="btn btn-primary">Generate Payslip</button>
+    <button type="submit" class="btn btn-primary" id="addSalaryBtn">Add Salary</button>
   </div>
 </form>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<script>
+ // Submit form via AJAX when "Add Salary" button is clicked
+  $('#salaryForm').submit(function(event) {
+    // Prevent default form submission
+    event.preventDefault();
+
+    // Serialize form data
+    const formData = $(this).serialize();
+
+    // AJAX POST request to add salary
+    $.ajax({
+      type: 'POST',
+      url: '/salary/addSalary',
+      data: formData,
+      success: function(response) {
+        // On successful addition of salary, request generation of payslip PDF
+        generatePayslip(response.salaryId); // Assuming response contains the ID of the newly added salary
+      },
+      error: function(xhr, status, error) {
+        console.error('Error adding salary:', error);
+        // Handle error appropriately
+      }
+    });
+  });
+
+  // Function to generate payslip PDF
+  function generatePayslip(salaryId) {
+    // AJAX GET request to generate payslip PDF
+    $.ajax({
+      type: 'GET',
+      url: `/salary/generatePayslip/${salaryId}`,
+      success: function(response) {
+        // Redirect or handle PDF download as needed
+        // For example:
+        window.location.href = response.pdfUrl; // Assuming response contains the URL of the generated PDF
+      },
+      error: function(xhr, status, error) {
+        console.error('Error generating payslip:', error);
+        // Handle error appropriately
+      }
+    });
+  }
+</script>

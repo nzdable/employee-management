@@ -6,52 +6,121 @@ const SalarySchema = new Schema({
         type: String,
         required: true
     },
-    basicDailyRate: { // Added field for Basic Daily Rate
+    tin: {
+        type: String,
+        required: true
+    },
+    sss: {
+        type: String,
+        required: true
+    },
+    philhealth: {
+        type: String,
+        required: true
+    },
+    hdmf: {
+        type: String,
+        required: true
+    },
+    basicPay: {
         type: Number,
         required: true
     },
-    // Government Deductions
-    pagibig: {
+    nightDiff: {
         type: Number,
-        default: 0
+        required: true
     },
-    sss: {
+    overtimePay: {
         type: Number,
-        default: 0
+        required: true
     },
-    philhealth: {
+    holidayPay: {
         type: Number,
-        default: 0
+        required: true
     },
-    tin: {
+    internetAllowance: {
         type: Number,
-        default: 0
+        required: true
     },
-    // Additional Earnings
-    overtime: {
+    otherBonuses: {
         type: Number,
-        default: 0
+        required: true
     },
-    incentives: {
+    attendanceIncentive: {
         type: Number,
-        default: 0
+        required: true
     },
-    // Other Deductions
-    tardiness: {
+    totalCompensation: {
         type: Number,
-        default: 0
+        required: true
     },
-    absences: {
+    totalNetPay: {
         type: Number,
-        default: 0
+        required: true
     },
-    loans: {
+    hoursWorked: {
         type: Number,
-        default: 0
+        required: true
     },
-    violations: {
+    regularOvertime: {
         type: Number,
-        default: 0
+        required: true
+    },
+    regularHoliday: {
+        type: Number,
+        required: true
+    },
+    specialNonWorkingDay: {
+        type: Number,
+        required: true
+    },
+    holidayOvertime: {
+        type: Number,
+        required: true
+    },
+    serviceIncentiveLeaveCredit: {
+        type: Number,
+        required: true
+    },
+    grossPayRate: {
+        type: Number,
+        required: true
+    },
+    grossRatePerHour: {
+        type: Number,
+        required: true
+    },
+    grossSalaryDollars: {
+        type: Number,
+        required: true
+    },
+    grossSalaryPesos: {
+        type: Number,
+        required: true
+    },
+    internetAllowanceBonuses: {
+        type: Number,
+        required: true
+    },
+    totalGrossCompensation: {
+        type: Number,
+        required: true
+    },
+    yearToDateCompensation: {
+        type: Number,
+        required: true
+    },
+    yearToDateDeductions: {
+        type: Number,
+        required: true
+    },
+    yearToDateGrossPay: {
+        type: Number,
+        required: true
+    },
+    yearToDateNetPay: {
+        type: Number,
+        required: true
     },
     // Dates
     payrollDate: {
@@ -65,19 +134,6 @@ const SalarySchema = new Schema({
     endingCutoff: {
         type: Date,
         default: Date.now()
-    },
-    // Additional fields for computed values
-    totalEarnings: {
-        type: Number,
-        default: 0
-    },
-    totalDeductions: {
-        type: Number,
-        default: 0
-    },
-    netSalary: {
-        type: Number,
-        default: 0
     }
 });
 
