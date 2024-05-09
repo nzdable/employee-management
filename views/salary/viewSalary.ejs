@@ -1,0 +1,54 @@
+<div class="d-flex justify-content-between flex-wrap flex-md nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">View Salary</h1>
+  </div>
+  
+  <!-- Breadcrumb navigation -->
+  <div class="col py-3">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
+        <li class="breadcrumb-item active">View Salary</li>
+      </ol>
+    </nav>
+  </div>
+  
+  <!-- Display salary details -->
+  <div class="container">
+    <h2>Payslip</h2>
+    <div class="row">
+      <div class="col">
+        <p>Employee Name: <%= salary.employeeName %></p> 
+        <p>TIN No.: <%= salary.tin %></p>
+        <p>SSS No.: <%= salary.sss %></p>
+        <p>PHILHEALTH No.: <%= salary.philhealth %></p>
+        <p>HDMF No.: <%= salary.hdmf %></p>
+        <p>Basic Pay: <%= salary.basicPay %></p>
+        <p>Night Differential: <%= salary.nightDiff %></p>
+        <p>Overtime Pay: <%= salary.overtimePay %></p>
+        <p>Holiday Pay: <%= salary.holidayPay %></p>
+        <p>Internet Allowance: <%= salary.internetAllowance %></p>
+        <p>Other Bonuses: <%= salary.otherBonuses %></p>
+        <p>Attendance Incentive: <%= salary.attendanceIncentive %></p>
+        <p>Total Compensation: <%= salary.totalCompensation %></p>
+        <p>Total Net Pay: <%= salary.totalNetPay %></p>
+        <p>Hours Worked: <%= salary.hoursWorked %></p>
+        <p>Regular Overtime: <%= salary.regularOvertime %></p>
+        <p>Regular Holiday: <%= salary.regularHoliday %></p>
+        <p>Number of Working Days: <%= salary.numberOfWorkingDays %></p>
+        <p>Special Non-Working Day: <%= salary.specialNonWorkingDay %></p>
+        <p>Holiday Overtime: <%= salary.holidayOvertime %></p>
+        <p>Service Incentive Leave Credit: <%= salary.serviceIncentiveLeaveCredit %></p>
+        <p>Gross Pay Rate: <%= salary.grossPayRate %></p>
+        <p>Gross Rate per Hour: <%= salary.grossRatePerHour %></p>
+        <p>Gross Salary Dollars: <%= salary.grossSalaryDollars %></p>
+        <p>Gross Salary Pesos: <%= salary.grossSalaryPesos %></p>
+        <p>Internet Allowance and Bonuses: <%= salary.internetAllowanceBonuses %></p>
+        <p>Total Gross Compensation: <%= salary.totalGrossCompensation %></p>
+        <p>Year To Date Compensation: <%= salary.yearToDateCompensation %></p>
+        <p>Year To Date Deductions: <%= salary.yearToDateDeductions %></p>
+        <p>Year To Date Gross Pay: <%= salary.yearToDateGrossPay %></p>
+        <p>Year To Date Net Pay: <%= salary.yearToDateNetPay %></p>
+      </div>
+    </div>
+  </div>
+  

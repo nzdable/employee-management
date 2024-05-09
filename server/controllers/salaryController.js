@@ -31,6 +31,66 @@ const calculateDeductions = (basicDailyRate, absences, tardinessHours) => {
   };
 };
 
+// Render the page to add a new salary
+exports.renderAddSalaryPage = async (req, res) => {
+  try {
+    // Retrieve customers from the database
+    const customers = await Customer.find().exec();
+
+    const locals = {
+      title: "Add New Salary",
+      customers: customers
+    };
+
+    res.render("salary/addSalary", locals);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('An error occurred while rendering the add salary page.');
+  }
+};
+
+// Add a new salary
+exports.addSalary = async (req, res) => {
+  const {
+    employeeName,
+    monthlyRate,
+    startingCutoff,
+    endingCutoff,
+    absences,
+    tardinessHours,
+    numberOfWorkingDays,
+  } = req.body;
+
+  try {
+    const basicDailyRate = calculateBasicDailyRate(monthlyRate);
+    const rates = calculateRates(basicDailyRate);
+    const deductions = calculateDeductions(basicDailyRate, absences, tardinessHours);
+    const totalEarnings = basicDailyRate * numberOfWorkingDays;
+    const totalDeductions = deductions.absencesDeduction + deductions.tardinessDeduction;
+    const netSalary = totalEarnings - totalDeductions;
+
+    const newSalary = new Salary({
+      employeeName,
+      basicDailyRate,
+      ...rates,
+      ...deductions,
+      totalEarnings,
+      totalDeductions,
+      netSalary,
+      startingCutoff,
+      endingCutoff,
+    });
+
+    await newSalary.save();
+
+    res.redirect('/salaryList'); // Redirect to the salary list page
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('An error occurred while adding salary.');
+  }
+};
+
+// Render the page to view all salaries
 exports.viewSalaryList = async (req, res) => {
   try {
     const messages = await req.flash("info");
@@ -58,73 +118,39 @@ exports.viewSalaryList = async (req, res) => {
   }
 };
 
-exports.addSalary = async (req, res) => {
+// Render the page to view a specific salary
+exports.viewSalary = async (req, res) => {
+  try {
+    const salary = await Salary.findById(req.params.id);
+    res.render('viewSalary', { salary });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('An error occurred while fetching salary details.');
+  }
+};
+
+// Edit an existing salary
+exports.editSalary = async (req, res) => {
   const {
-      employeeName,
-      monthlyRate, // Assuming monthly rate is provided
-      startingCutoff,
-      endingCutoff,
-      absences,
-      tardinessHours,
-      // Add other necessary fields as per your requirements
+    employeeName,
+    salary,
+    pagibig,
+    sss,
+    philhealth,
+    tin,
+    overtime,
+    incentives,
+    tardiness,
+    absences,
+    loans,
+    violations,
+    payrollDate,
+    startingCutoff,
+    endingCutoff
   } = req.body;
 
   try {
-      // Calculate Basic Daily Rate
-      const basicDailyRate = calculateBasicDailyRate(monthlyRate);
-
-      // Calculate various rates based on Basic Daily Rate
-      const rates = calculateRates(basicDailyRate);
-
-      // Calculate deductions for absences and tardiness
-      const deductions = calculateDeductions(basicDailyRate, absences, tardinessHours);
-
-      // Calculate total earnings, deductions, and net salary
-      const totalEarnings = basicDailyRate * numberOfWorkingDays; // Modify this based on your requirements
-      const totalDeductions = deductions.absencesDeduction + deductions.tardinessDeduction; // Add other deductions as necessary
-      const netSalary = totalEarnings - totalDeductions;
-
-      const newSalary = new Salary({
-          employeeName,
-          basicDailyRate,
-          ...rates,
-          ...deductions,
-          totalEarnings,
-          totalDeductions,
-          netSalary,
-          startingCutoff,
-          endingCutoff,
-          // Add other necessary fields as per your requirements
-      });
-
-      await newSalary.save();
-      res.redirect('/salary/viewSalary/' + newSalary._id);
-  } catch (error) {
-      console.error(error);
-      res.status(500).send('An error occurred while adding salary.');
-  }
-};
-
-exports.renderAddSalaryPage = async (req, res) => {
-  try {
-    // Retrieve customers from the database
-    const customers = await Customer.find().exec();
-
-    const locals = {
-      title: "Add New Salary",
-      customers: customers // Pass the customers array to the template
-    };
-
-    res.render("salary/addSalary", locals);
-  } catch (error) {
-    console.error(error);
-    res.status(500).send('An error occurred while rendering the add salary page.');
-  }
-};
-
-
-exports.editSalary = async (req, res) => {
-  const {
+    await Salary.findByIdAndUpdate(req.params.id, {
       employeeName,
       salary,
       pagibig,
@@ -139,76 +165,38 @@ exports.editSalary = async (req, res) => {
       violations,
       payrollDate,
       startingCutoff,
-      endingCutoff
-  } = req.body;
+      endingCutoff,
+      updatedAt: Date.now()
+    });
 
-  try {
-      await Salary.findByIdAndUpdate(req.params.id, {
-          employeeName,
-          salary,
-          pagibig,
-          sss,
-          philhealth,
-          tin,
-          overtime,
-          incentives,
-          tardiness,
-          absences,
-          loans,
-          violations,
-          payrollDate,
-          startingCutoff,
-          endingCutoff,
-          updatedAt: Date.now()
-      });
-
-      res.redirect('/salary/viewSalary/' + req.params.id);
+    res.redirect('/salary/viewSalary/' + req.params.id);
   } catch (error) {
-      console.error(error);
-      res.status(500).send('An error occurred while editing salary.');
+    console.error(error);
+    res.status(500).send('An error occurred while editing salary.');
   }
 };
 
+// Generate a payslip for a specific salary
 exports.generatePayslip = async (req, res) => {
   try {
     const salary = await Salary.findById(req.params.id);
-
-    // Create a new PDF document
-    const doc = new PDFDocument();
-
-    // Write content to the PDF
-    doc.fontSize(16).text('Payslip', { align: 'center' });
-    doc.fontSize(12).text(`Employee Name: ${salary.employeeName}`);
-    doc.fontSize(12).text(`Basic Daily Rate: ${salary.basicDailyRate}`);
-    // Add more salary details as needed
-
-    // Finalize the PDF
-    doc.end();
-
-    // Set response headers for PDF file
-    res.setHeader('Content-Type', 'application/pdf');
-    res.setHeader('Content-Disposition', `attachment; filename=payslip_${salary.employeeName}.pdf`);
-
-    // Send the PDF as a response
-    const stream = doc.pipe(res);
-    stream.on('finish', () => {
-      res.end();
-    });
+    res.render('viewSalary', { salary });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'An error occurred while generating payslip' });
   }
 };
 
+// Generate an overall salary report
 exports.generateOverallSalaryReport = async (req, res) => {
   try {
-      const salaries = await Salary.find();
-      // Implement your logic to generate overall salary report here
-      // For example, you can calculate total earnings, total deductions, etc.
-      // Then render a report template with the calculated values
-      res.render('overallSalaryReport', { salaries });
+    const salaries = await Salary.find();
+    // Implement your logic to generate overall salary report here
+    // For example, you can calculate total earnings, total deductions, etc.
+    // Then render a report template with the calculated values
+    res.render('overallSalaryReport', { salaries });
   } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: 'An error occurred while generating overall salary report' });
+    console.error(error);
+    res.status(500).json({ error: 'An error occurred while generating overall salary report' });
   }
-}
+};
