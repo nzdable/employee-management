@@ -196,7 +196,44 @@
     </div>
   </div>
 
+  <label>Total Compensation:</label>
+  <span id="totalCompensation">0</span>
+
+  <label>Total Deductions:</label>
+  <span id="totalDeductions">0</span>
+
+  <label>Net Pay:</label>
+  <span id="netPay">0</span>
+
   <div class="form-group mb-4">
     <button type="submit" class="btn btn-primary" id="addSalaryBtn">Add Salary</button>
   </div>
 </form>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const compensationInputs = document.querySelectorAll('.compensation-input');
+    const deductionInputs = document.querySelectorAll('.deduction-input');
+  
+    compensationInputs.forEach(input => input.addEventListener('input', updateTotals));
+    deductionInputs.forEach(input => input.addEventListener('input', updateTotals));
+  
+    function updateTotals() {
+      let totalCompensation = 0;
+      let totalDeductions = 0;
+  
+      compensationInputs.forEach(input => {
+        totalCompensation += Number(input.value) || 0;
+      });
+  
+      deductionInputs.forEach(input => {
+        totalDeductions += Number(input.value) || 0;
+      });
+  
+      document.getElementById('totalCompensation').textContent = totalCompensation.toFixed(2);
+      document.getElementById('totalDeductions').textContent = totalDeductions.toFixed(2);
+      document.getElementById('netPay').textContent = (totalCompensation - totalDeductions).toFixed(2);
+    }
+  });
+  </script>
+  
