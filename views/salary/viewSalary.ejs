@@ -1,54 +1,48 @@
-<div class="d-flex justify-content-between flex-wrap flex-md nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-    <h1 class="h2">View Salary</h1>
-  </div>
+<div class="container">
+  <h1 class="h2">View Salary</h1>
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
+      <li class="breadcrumb-item active">View Salary</li>
+    </ol>
+  </nav>
   
-  <!-- Breadcrumb navigation -->
-  <div class="col py-3">
-    <nav aria-label="breadcrumb">
-      <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
-        <li class="breadcrumb-item active">View Salary</li>
-      </ol>
-    </nav>
-  </div>
-  
-  <!-- Display salary details -->
-  <div class="container">
-    <h2>Payslip</h2>
-    <div class="row">
-      <div class="col">
-        <p>Employee Name: <%= salary.employeeName %></p> 
-        <p>TIN No.: <%= salary.tin %></p>
-        <p>SSS No.: <%= salary.sss %></p>
-        <p>PHILHEALTH No.: <%= salary.philhealth %></p>
-        <p>HDMF No.: <%= salary.hdmf %></p>
-        <p>Basic Pay: <%= salary.basicPay %></p>
-        <p>Night Differential: <%= salary.nightDiff %></p>
-        <p>Overtime Pay: <%= salary.overtimePay %></p>
-        <p>Holiday Pay: <%= salary.holidayPay %></p>
-        <p>Internet Allowance: <%= salary.internetAllowance %></p>
-        <p>Other Bonuses: <%= salary.otherBonuses %></p>
-        <p>Attendance Incentive: <%= salary.attendanceIncentive %></p>
-        <p>Total Compensation: <%= salary.totalCompensation %></p>
-        <p>Total Net Pay: <%= salary.totalNetPay %></p>
-        <p>Hours Worked: <%= salary.hoursWorked %></p>
-        <p>Regular Overtime: <%= salary.regularOvertime %></p>
-        <p>Regular Holiday: <%= salary.regularHoliday %></p>
-        <p>Number of Working Days: <%= salary.numberOfWorkingDays %></p>
-        <p>Special Non-Working Day: <%= salary.specialNonWorkingDay %></p>
-        <p>Holiday Overtime: <%= salary.holidayOvertime %></p>
-        <p>Service Incentive Leave Credit: <%= salary.serviceIncentiveLeaveCredit %></p>
-        <p>Gross Pay Rate: <%= salary.grossPayRate %></p>
-        <p>Gross Rate per Hour: <%= salary.grossRatePerHour %></p>
-        <p>Gross Salary Dollars: <%= salary.grossSalaryDollars %></p>
-        <p>Gross Salary Pesos: <%= salary.grossSalaryPesos %></p>
-        <p>Internet Allowance and Bonuses: <%= salary.internetAllowanceBonuses %></p>
-        <p>Total Gross Compensation: <%= salary.totalGrossCompensation %></p>
-        <p>Year To Date Compensation: <%= salary.yearToDateCompensation %></p>
-        <p>Year To Date Deductions: <%= salary.yearToDateDeductions %></p>
-        <p>Year To Date Gross Pay: <%= salary.yearToDateGrossPay %></p>
-        <p>Year To Date Net Pay: <%= salary.yearToDateNetPay %></p>
-      </div>
+  <div class="row">
+    <div class="col-6">
+      <h2>Official Payslip</h2>
+      <p><strong>Employee Name:</strong> <%= salary.employeeName %></p>
+      <p><strong>TIN No.:</strong> <%= salary.tin %></p>
+      <p><strong>SSS No.:</strong> <%= salary.sss %></p>
+      <p><strong>PHILHEALTH No.:</strong> <%= salary.philhealth %></p>
+      <p><strong>HDMF No.:</strong> <%= salary.hdmf %></p>
+      <p><strong>Basic Pay:</strong> <%= salary.basicPay %></p>
+      <p><strong>Night Differential:</strong> <%= salary.nightDiff %></p>
+      <p><strong>Overtime Pay:</strong> <%= salary.overtimePay %></p>
+      <p><strong>Holiday Pay:</strong> <%= salary.holidayPay %></p>
+      <p><strong>Internet Allowance:</strong> <%= salary.internetAllowance %></p>
+      <p><strong>Other Bonuses:</strong> <%= salary.otherBonuses %></p>
+      <p><strong>Attendance Incentive:</strong> <%= salary.attendanceIncentive %></p>
+      <p><strong>Total Compensation:</strong> <%= salary.totalCompensation %></p>
+      <p><strong>Total Deductions:</strong> <%= salary.totalDeductions %></p>
+      <p><strong>Total Net Pay:</strong> <%= salary.totalNetPay %></p>
+    </div>
+    <div class="col-6">
+      <p><strong>Hours Worked:</strong> <%= salary.hoursWorked %></p>
+      <p><strong>Regular Overtime:</strong> <%= salary.regularOvertime %></p>
+      <p><strong>Regular Holiday:</strong> <%= salary.regularHoliday %></p>
+      <p><strong>Special Non-Working Day:</strong> <%= salary.specialNonWorkingDay %></p>
+      <p><strong>Holiday Overtime:</strong> <%= salary.holidayOvertime %></p>
+      <p><strong>Service Incentive Leave Credit:</strong> <%= salary.serviceIncentiveLeaveCredit %></p>
+      <p><strong>Gross Pay Rate:</strong> <%= salary.grossPayRate %></p>
+      <p><strong>Gross Rate per Hour:</strong> <%= salary.grossRatePerHour %></p>
+      <p><strong>Gross Salary Dollars:</strong> <%= salary.grossSalaryDollars %></p>
+      <p><strong>Gross Salary Pesos:</strong> <%= salary.grossSalaryPesos %></p>
+      <p><strong>Internet Allowance and Bonuses:</strong> <%= salary.internetAllowanceBonuses %></p>
+      <p><strong>Total Gross Compensation:</strong> <%= salary.totalGrossCompensation %></p>
+      <p><strong>Year To Date Compensation:</strong> <%= salary.yearToDateCompensation %></p>
+      <p><strong>Year To Date Deductions:</strong> <%= salary.yearToDateDeductions %></p>
+      <p><strong>Year To Date Gross Pay:</strong> <%= salary.yearToDateGrossPay %></p>
+      <p><strong>Year To Date Net Pay:</strong> <%= salary.yearToDateNetPay %></p>
     </div>
   </div>
-  
+</div>
