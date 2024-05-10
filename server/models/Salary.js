@@ -3,10 +3,10 @@ const Schema = mongoose.Schema;
 
 const SalarySchema = new Schema({
     employeeName: { type: String, required: true },
-    tin: { type: String },
-    sss: { type: String },
-    philhealth: { type: String },
-    hdmf: { type: String },
+    tin: { type: String, required: true },
+    sss: { type: String, required: true },
+    philhealth: { type: String, required: true },
+    hdmf: { type: String, required: true },    
     basicPay: { type: Number, required: true },
     nightDiff: { type: Number, default: 0 },
     overtimePay: { type: Number, default: 0 },

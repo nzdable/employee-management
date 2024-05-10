@@ -52,6 +52,17 @@
 
   <div class="row form-group mb-4">
     <div class="col">
+        <label for="startingCutoff">Starting Cutoff Date</label>
+        <input type="date" class="form-control" id="startingCutoff" name="startingCutoff" required>
+    </div>
+    <div class="col">
+        <label for="endingCutoff">Ending Cutoff Date</label>
+        <input type="date" class="form-control" id="endingCutoff" name="endingCutoff" required>
+    </div>
+  </div>
+
+  <div class="row form-group mb-4">
+    <div class="col">
       <label for="basicPay">Basic Pay</label>
       <input type="number" class="form-control" id="basicPay" name="basicPay" placeholder="Enter Basic Pay" required>
     </div>
@@ -140,32 +151,28 @@
       <input type="number" class="form-control" id="serviceIncentiveLeaveCredit" name="serviceIncentiveLeaveCredit" placeholder="Enter Service Incentive Leave Credit" required>
     </div>
     <div class="col">
-      <label for="grossPayRate">Gross Pay Rate</label>
-      <input type="number" class="form-control" id="grossPayRate" name="grossPayRate" placeholder="Enter Gross Pay Rate" required>
-    </div>
-  </div>
-
-  <div class="row form-group mb-4">
-    <div class="col">
-      <label for="grossRatePerHour">Gross Rate per Hour</label>
-      <input type="number" class="form-control" id="grossRatePerHour" name="grossRatePerHour" placeholder="Enter Gross Rate per Hour" required>
-    </div>
-    <div class="col">
-      <label for="grossSalaryDollars">Gross Salary Dollars</label>
-      <input type="number" class="form-control" id="grossSalaryDollars" name="grossSalaryDollars" placeholder="Enter Gross Salary Dollars" required>
-    </div>
-  </div>
-
-  <div class="row form-group mb-4">
-    <div class="col">
-      <label for="grossSalaryPesos">Gross Salary Pesos</label>
-      <input type="number" class="form-control" id="grossSalaryPesos" name="grossSalaryPesos" placeholder="Enter Gross Salary Pesos" required>
-    </div>
-    <div class="col">
       <label for="internetAllowanceBonuses">Internet Allowance and Bonuses</label>
       <input type="number" class="form-control" id="internetAllowanceBonuses" name="internetAllowanceBonuses" placeholder="Enter Internet Allowance and Bonuses" required>
     </div>
   </div>
+
+  <div class="row form-group mb-4">
+    <div class="col">
+      <label for="grossPayRate">Gross Pay Rate</label>
+      <span id="grossPayRate" class="form-control">Auto-calculated</span>
+    </div>
+    <div class="col">
+      <label for="grossSalaryDollars">Gross Salary Dollars</label>
+      <span id="grossSalaryDollars" class="form-control">Auto-calculated</span>
+    </div>
+</div>
+
+<div class="row form-group mb-4">
+    <div class="col">
+      <label for="grossSalaryPesos">Gross Salary Pesos</label>
+      <span id="grossSalaryPesos" class="form-control">Auto-calculated</span>
+    </div>
+</div>
 
   <div class="row form-group mb-4">
     <div class="col">
