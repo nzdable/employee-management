@@ -31,25 +31,23 @@ const Customer = require('../models/Customer');
 //     };
 //   };
 
-// Define a function to calculate the gross pay rate based on the basic pay
+/// Example function to calculate the gross pay rate based on the basic pay
 function calculateGrossPayRate(basicPay) {
-    return basicPay * 1.2;  // Example calculation, adjust as needed
+    return basicPay * 1.2;  // This is a simplistic calculation, adjust as needed
 }
 
-// Example exchange rate
-const exchangeRate = 50;
+const exchangeRate = 50;  // Example exchange rate for dollar to peso conversion
 
 exports.renderAddSalaryPage = async (req, res) => {
     try {
-      const customers = await Customer.find().exec();
-      const locals = {
-        title: "Add New Salary",
-        customers: customers
-      };
-      res.render("salary/addSalary", locals);
+        const customers = await Customer.find().exec();
+        res.render("salary/addSalary", {
+            title: "Add New Salary",
+            customers: customers
+        });
     } catch (error) {
-      console.error(error);
-      res.status(500).send('An error occurred while rendering the add salary page.');
+        console.error(error);
+        res.status(500).send('An error occurred while rendering the add salary page.');
     }
 };
 
@@ -57,32 +55,35 @@ exports.addSalary = async (req, res) => {
     const {
         employeeName, tin, sss, philhealth, hdmf, basicPay, nightDiff,
         overtimePay, holidayPay, internetAllowance, otherBonuses, attendanceIncentive,
-        sssDeduction, philhealthDeduction, hdmfDeduction, startingCutoff, endingCutoff
+        sssDeduction, philhealthDeduction, hdmfDeduction, startingCutoff, endingCutoff,
+        hoursWorked, regularOvertime, regularHoliday, specialNonWorkingDay, holidayOvertime,
+        serviceIncentiveLeaveCredit
     } = req.body;
 
-    // Calculate grossPayRate
-    const grossPayRate = calculateGrossPayRate(basicPay);  // You need to define this function
-
-    // Assuming grossPayRate needs to be calculated or passed in.
-    // If grossPayRate is not passed as part of the request, calculate it as needed:
-    // const calculatedGrossPayRate = grossPayRate || calculateGrossPayRate(basicPay);  // You need to define this function
-
-    const grossSalaryDollars = basicPay * exchangeRate;
-    const grossSalaryPesos = basicPay;  // Already defined
+    const grossPayRate = calculateGrossPayRate(basicPay);
+    const grossSalaryDollars = (basicPay + nightDiff + overtimePay + holidayPay + internetAllowance + otherBonuses) / exchangeRate;
+    const grossSalaryPesos = basicPay + nightDiff + overtimePay + holidayPay + internetAllowance + otherBonuses;
+    const totalGrossCompensation = basicPay + nightDiff + overtimePay + holidayPay + internetAllowance + otherBonuses + attendanceIncentive + regularOvertime + regularHoliday + specialNonWorkingDay + holidayOvertime;
+    const yearToDateCompensation = totalGrossCompensation; // This needs to be accumulated over the year
+    const totalDeductions = sssDeduction + philhealthDeduction + hdmfDeduction;
+    const yearToDateDeductions = totalDeductions; // This also needs to be accumulated over the year
+    const yearToDateGrossPay = totalGrossCompensation; // Accumulated gross pay over the year
+    const yearToDateNetPay = yearToDateGrossPay - yearToDateDeductions; // Net pay accumulated over the year
 
     const newSalary = new Salary({
         employeeName, tin, sss, philhealth, hdmf,
         basicPay, nightDiff, overtimePay, holidayPay, internetAllowance,
         otherBonuses, attendanceIncentive, sssDeduction, philhealthDeduction,
         hdmfDeduction, payrollDate: new Date(), startingCutoff, endingCutoff,
-        grossPayRate,
-        grossSalaryDollars,
-        grossSalaryPesos
+        hoursWorked, regularOvertime, regularHoliday, specialNonWorkingDay, holidayOvertime,
+        serviceIncentiveLeaveCredit, grossPayRate, grossSalaryDollars, grossSalaryPesos,
+        totalGrossCompensation, yearToDateCompensation, totalDeductions, yearToDateDeductions,
+        yearToDateGrossPay, yearToDateNetPay
     });
 
     try {
         await newSalary.save();
-        res.redirect('/salaryList'); // Redirect to the salary list page
+        res.redirect('/salaryList'); // Redirect to the salary list page after save
     } catch (error) {
         console.error(error);
         res.status(500).send('An error occurred while adding salary.');
@@ -92,7 +93,10 @@ exports.addSalary = async (req, res) => {
 exports.viewSalaryList = async (req, res) => {
     try {
         const salaries = await Salary.find();
-        res.render('salaryList', { title: "Salary List", salaries });
+        res.render('salaryList', {
+            title: "Salary List",
+            salaries
+        });
     } catch (error) {
         console.error(error);
         res.status(500).send('An error occurred while fetching salary list.');
@@ -105,7 +109,7 @@ exports.editSalary = async (req, res) => {
 
     try {
         await Salary.findByIdAndUpdate(id, salaryUpdates);
-        res.redirect(`salary/viewSalary/${id}`);
+        res.redirect(`/salary/viewSalary/${id}`);
     } catch (error) {
         console.error(error);
         res.status(500).send('An error occurred while editing salary.');
@@ -116,8 +120,10 @@ exports.viewSalary = async (req, res) => {
     const { id } = req.params;
     try {
         const salary = await Salary.findById(id);
-        console.log(salary);  // Log the salary object to debug
-        res.render('salary/viewSalary', { title: "View Salary", salary });
+        res.render('salary/viewSalary', {
+            title: "View Salary",
+            salary
+        });
     } catch (error) {
         console.error(error);
         res.status(500).send('An error occurred while fetching salary details.');

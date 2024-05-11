@@ -93,3 +93,12 @@ exports.updateLeave = async (req, res) => {
     res.status(500).json({ error: 'An error occurred while updating leave details' });
   }
 };
+
+exports.saveSignatory = async (data) => {
+  try {
+    // Save signatory logic goes here
+  } catch (error) {
+    console.error(error);
+    throw new Error('An error occurred while saving signatory');
+  }
+};
